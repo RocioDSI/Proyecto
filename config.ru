@@ -1,5 +1,5 @@
 # config.ru
 
-require './app'
-#require_relative 'app'
+require './blog'
+#require_relative 'blog'
 run Sinatra::Application
