@@ -24,13 +24,13 @@ end
 get "/" do
   @posts = Post.order("created_at DESC")
   @title = "Bienvenido."
-  erb :"Posts/index"
+  erb :index
 end
 
 get "/posts/create" do
   @title = "Comparte tu receta."
   @post = Post.new
-  erb :"posts/create"
+  erb :create
 end
 
 post "/posts" do
@@ -51,7 +51,7 @@ end
 get "/posts/:id/edit" do
   @post = Post.find(params[:id])
   @title = "Edite su receta."
-  erb :"posts/edit"
+  erb :edit
 end
 
 put "/posts/:id" do
