@@ -11,4 +11,9 @@ class Post < ActiveRecord::Base
 		erb :"posts/view"
 	end
 
+	get "/posts/create" do
+		@title = "Create post"
+		@post = Post.new
+		erb :"posts/create"
+	end
 end
