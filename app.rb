@@ -28,7 +28,11 @@ get "/" do
   erb :index
 end
 
-
+put "/posts/:id" do
+  @post = Post.find(params[:id])
+  @post.update(params[:post])
+  redirect "/posts/#{@post.id}"
+end
 #Ver post
 get "/posts/:id" do
  @post = Post.find(params[:id])
@@ -42,10 +46,6 @@ get "/posts/:id/edit" do
   erb :edit
 end
 
-put "/posts/:id" do
-  @post = Post.find(params[:id])
-  @post.update(params[:post])
-  redirect "/posts/#{@post.id}"
 
 #Crear nuevo post
 get "/posts/create" do
@@ -64,4 +64,3 @@ post "/posts" do
 end
 
 
-end
