@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-ruby "2.0.0"
+#ruby "2.0.0"
 
 gem "sinatra"
 gem 'activerecord'
@@ -23,3 +23,4 @@ end
 group :production do
   gem "pg"
   gem "dm-postgres-adapter"
+end
