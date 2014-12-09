@@ -11,6 +11,13 @@ class Post < ActiveRecord::Base
   validates :body, presence: true
 end
 
+#Get todos los post
+get "/" do
+  @posts = Post.order("created_at DESC")
+  @title = "Bienvenido."
+  erb :index
+end
+
 helpers do
   def title
     if @title
@@ -19,13 +26,6 @@ helpers do
       "Introduce tu primera receta de cocina."
     end
   end
-end
-
-#Get todos los post
-get "/" do
-  @posts = Post.order("created_at DESC")
-  @title = "Bienvenido."
-  erb :index
 end
 
 put "/posts/:id" do
