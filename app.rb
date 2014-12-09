@@ -33,6 +33,7 @@ put "/posts/:id" do
   @post.update(params[:post])
   redirect "/posts/#{@post.id}"
 end
+
 #Ver post
 get "/posts/:id" do
  @post = Post.find(params[:id])
