@@ -5,6 +5,7 @@ require 'sinatra/flash'
 require 'sinatra/redirect_with_flash'
 
 enable :sessions
+user = Array.new()
 
 class Post < ActiveRecord::Base
   validates :title, presence: true, length: {minimum: 5}
@@ -29,9 +30,32 @@ end
 # Obtiene todos los posts
 get "/" do
   @posts = Post.order("created_at DESC")
-  @title = "Bienvenid@"
+  @title = "ReceBlario"
   erb :index
 end
+
+get "/login" do
+  erb :login
+end
+
+post "/login" do
+  if (user.include?(params[:username]))
+    redirect '/'
+  else
+    name = params[:username]
+    session[:name] = name
+    user << name
+    puts user
+    erb :recetas
+  end
+  redirect "recetas"
+end
+
+get "/recetas" do
+  erb :recetas
+end
+
+
 
 # Crear nuevo post
 get "/posts/create" do
@@ -68,4 +92,6 @@ put "/posts/:id" do
   @post.update(params[:post])
   redirect "/posts/#{@post.id}"
 end
+
+
 
