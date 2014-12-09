@@ -28,6 +28,13 @@ helpers do
   end
 end
 
+#Crear nuevo post
+get "/posts/create" do
+  @title = "Comparte tu receta."
+  @post = Post.new
+  erb :create
+end
+
 put "/posts/:id" do
   @post = Post.find(params[:id])
   @post.update(params[:post])
@@ -45,14 +52,6 @@ get "/posts/:id/edit" do
   @post = Post.find(params[:id])
   @title = "Edite su receta."
   erb :edit
-end
-
-
-#Crear nuevo post
-get "/posts/create" do
-  @title = "Comparte tu receta."
-  @post = Post.new
-  erb :create
 end
 
 post "/posts" do
