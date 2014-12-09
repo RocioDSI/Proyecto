@@ -11,13 +11,6 @@ class Post < ActiveRecord::Base
   validates :body, presence: true
 end
 
-#Get todos los post
-get "/" do
-  @posts = Post.order("created_at DESC")
-  @title = "Bienvenido."
-  erb :index
-end
-
 helpers do
   def title
     if @title
@@ -28,30 +21,18 @@ helpers do
   end
 end
 
-#Crear nuevo post
+# Obtiene todos los posts
+get "/" do
+  @posts = Post.order("created_at DESC")
+  @title = "Bienvenid@"
+  erb :index
+end
+
+# Crear nuevo post
 get "/posts/create" do
-  @title = "Comparte tu receta."
+  @title = "Comparte una nueva receta"
   @post = Post.new
   erb :create
-end
-
-put "/posts/:id" do
-  @post = Post.find(params[:id])
-  @post.update(params[:post])
-  redirect "/posts/#{@post.id}"
-end
-
-#Ver post
-get "/posts/:id" do
- @post = Post.find(params[:id])
- @title = @post.title
- erb :view
-end
-
-get "/posts/:id/edit" do
-  @post = Post.find(params[:id])
-  @title = "Edite su receta."
-  erb :edit
 end
 
 post "/posts" do
@@ -63,4 +44,23 @@ post "/posts" do
   end
 end
 
+# Ver post
+get "/posts/:id" do
+ @post = Post.find(params[:id])
+ @title = @post.title
+ erb :view
+end
+
+# Editar post
+get "/posts/:id/edit" do
+  @post = Post.find(params[:id])
+  @title = "Edite su receta."
+  erb :edit
+end
+
+put "/posts/:id" do
+  @post = Post.find(params[:id])
+  @post.update(params[:post])
+  redirect "/posts/#{@post.id}"
+end
 
