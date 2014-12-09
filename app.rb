@@ -4,7 +4,25 @@ require './environments'
 require 'sinatra/flash'
 require 'sinatra/redirect_with_flash'
 
+##### Para autenticación de Google >>>>>>>>>
+require 'bundler/setup'
+require 'sinatra/reloader' if development?
+require 'omniauth-oauth2'
+require 'omniauth-google-oauth2'
+require 'pry'
+require 'erubis'
+require 'pp'
+
+set :erb, :escape_html => true
+
+use OmniAuth::Builder do
+  config = YAML.load_file 'config/config.yml'
+  provider :google_oauth2, config['identifier'], config['secret']
+end
+
 enable :sessions
+set :session_secret, '*&(^#234a)'
+##### Para autenticación de Google <<<<<<<<<
 
 class Post < ActiveRecord::Base
   validates :title, presence: true, length: {minimum: 5}

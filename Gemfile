@@ -13,6 +13,12 @@ gem 'data_mapper'
 gem 'sinatra-contrib'
 gem 'rack-cache'
 
+##### Para autenticación de Google >>>>>>>>>
+gem 'omniauth'
+gem 'omniauth-google-oauth2'
+gem 'pry'
+gem 'erubis'
+##### Para autenticación de Google <<<<<<<<<
 
 group :development do
   gem "sqlite3"
