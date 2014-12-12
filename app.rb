@@ -17,7 +17,7 @@ helpers do
     if @title
       "#{@title}"
     else
-      "Introduce tu primera receta de cocina."
+      "ReceBlario"
     end
   end
 end
@@ -39,16 +39,16 @@ get "/login" do
 end
 
 post "/login" do
-  if (user.include?(params[:username]))
-    redirect '/'
-  else
-    name = params[:username]
-    session[:name] = name
-    user << name
-    puts user
-    erb :recetas
-  end
-  redirect "recetas"
+  #if (user.include?(params[:username]))
+  #  redirect '/recetas'
+  #else
+  #  name = params[:username]
+  #  session[:name] = name
+  #  user << name
+  #  puts user
+  #  erb :recetas
+  #end
+  redirect "/recetas"
 end
 
 get "/recetas" do
