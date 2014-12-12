@@ -52,6 +52,8 @@ post "/login" do
 end
 
 get "/recetas" do
+  @posts = Post.order("created_at DESC")
+  #@title = ReceBlario
   erb :recetas
 end
 
