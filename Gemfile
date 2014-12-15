@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
-ruby "2.0.0"
+#Ruby "2.0.0"
+
 
 gem "sinatra"
 gem 'activerecord'

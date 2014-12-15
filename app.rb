@@ -1,6 +1,8 @@
 require 'sinatra'
 require 'sinatra/activerecord'
 require './environments'
+require 'dm-core'
+require 'dm-migrations'
 require 'sinatra/flash'
 require 'sinatra/redirect_with_flash'
 
@@ -23,8 +25,6 @@ configure :development do
 end
 
 DataMapper.finalize
-
-User.auto_upgrade!
 
 helpers do
   def title
