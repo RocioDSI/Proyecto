@@ -24,7 +24,7 @@ end
 
 helpers do
   include Rack::Utils
-  alias_method :h, :escape_html
+
 end
 
 # Obtiene todos los posts
