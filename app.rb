@@ -56,7 +56,11 @@ get "/recetas" do
   #@title = ReceBlario
   erb :recetas
 end
-
+post "posts/recetas" do
+  @posts = Post.order("created_at DESC")
+  #@title = ReceBlario
+  erb :recetas
+end
 
 
 # Crear nuevo post
@@ -73,6 +77,9 @@ post "/posts" do
   else
     redirect "posts/create", :error => 'Error al publicar, intentelo de nuevo.'
   end
+
+redirect "posts/recetas"
+
 end
 
 # Ver post
