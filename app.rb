@@ -97,13 +97,17 @@ put "/posts/:id" do
   redirect "/posts/#{@post.id}"
 end
 
+get '/login' do
+  erb :signup
+end
+
 get '/users/new' do
   erb :signup
 end
 
 get '/users/:id' do |id|
   @user = User.get(id)
-  erb :signin
+  erb :recetas
 end
 
 # Crea el usuario en la base de datos siempre que sea posible
@@ -111,19 +115,33 @@ end
 # vacíos, devuelve un mensaje de error mediante el flash de
 # sinatra
 
-post '/users' do
+get '/login' do
+haml :login
+end
+# Realiza el login comprobando que el nombre de usuario y contraseña
+# introducidos son los correctos. Si el usuario y contraseña no están
+# rellenos, o no han sido creados en la base de datos, devuelve error
+# mediante el flash de sinatra; si no es así, crea la sesión
+# agregando el atributo user en el hash de session, con el username
+# del usuario que ha realizado el login
+post '/login' do
   if (params[:user][:username].empty?) || (params[:user][:password].empty?)
-    flash[:error] = "Error: El nombre de usuario o el password está vacío."
-    redirect to ('/users/new')
-  elsif User.first(:username => "#{params[:user][:username]}")
-    flash[:error] = "El usuario ya existe, elija otro usuario."
-    redirect to ('/users/new')
-  else
-    user = User.create(params[:user])
-    flash[:success] = "Su usuario ha sido registrado"
-    flash[:login] = "Ha iniciado sesión"
+    flash[:error] = "Error: The user or the password field is empty"
+    redirect to ('/login')
+  elsif User.first(:username => "#{params[:user][:username]}", :password => "#{params[:user][:password]}")
+    flash[:login] = "Login successfully"
     session["user"] = "#{params[:user][:username]}"
-    redirect to("/recetas")
+    puts session["user"]
+    redirect to ('/')
+  else
+    flash[:error] = "The user doesn't exist or the password is invalid"
+    redirect to("/login")
   end
 end
-
+# Realiza el logout del usuario, eliminando el atributo user
+# de la session
+get '/logout' do
+  session.delete("user")
+  flash[:logout] = "Logout successfully"
+  redirect to ('/')
+end
