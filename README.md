@@ -1,7 +1,9 @@
 Proyecto de SyTW
 ========
 
-## Red social
+## recet[BL]ario
+
+Blog, en el que puedes publicar tus recetas.
 
 Autores:
 * [Sem Ramos Herrera](https://campusvirtual.ull.es/1415/user/view.php?id=2643&course=5678)

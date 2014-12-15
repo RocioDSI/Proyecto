@@ -31,19 +31,36 @@ helpers do
     if @title
       "#{@title}"
     else
-      "Introduce tu primera receta de cocina."
+      "ReceBlario"
     end
   end
 end
 
+helpers do
+  include Rack::Utils
+  alias_method :h, :escape_html
+end
+
+# Obtiene todos los posts
 get "/" do
   @posts = Post.order("created_at DESC")
-  @title = "Bienvenido."
+  @title = "ReceBlario"
   erb :index
 end
 
+get "/login" do
+  erb :login
+end
+
+get "/recetas" do
+  @posts = Post.order("created_at DESC")
+  #@title = ReceBlario
+  erb :recetas
+end
+
+# Crear nuevo post
 get "/posts/create" do
-  @title = "Comparte tu receta."
+  @title = "Comparte una nueva receta"
   @post = Post.new
   erb :create
 end
@@ -55,14 +72,19 @@ post "/posts" do
   else
     redirect "posts/create", :error => 'Error al publicar, intentelo de nuevo.'
   end
+
+redirect "posts/recetas"
+
 end
 
+# Ver post
 get "/posts/:id" do
-  @post = Post.find(params[:id])
-  @title = @post.title
-  erb :"posts/view"
+ @post = Post.find(params[:id])
+ @title = @post.title
+ erb :view
 end
 
+# Editar post
 get "/posts/:id/edit" do
   @post = Post.find(params[:id])
   @title = "Edite su receta."
@@ -76,12 +98,12 @@ put "/posts/:id" do
 end
 
 get '/users/new' do
-  erb :new_user
+  erb :signup
 end
 
 get '/users/:id' do |id|
   @user = User.get(id)
-  erb :show_user
+  erb :signin
 end
 
 # Crea el usuario en la base de datos siempre que sea posible
@@ -101,6 +123,7 @@ post '/users' do
     flash[:success] = "Su usuario ha sido registrado"
     flash[:login] = "Ha iniciado sesión"
     session["user"] = "#{params[:user][:username]}"
-    redirect to("/users/#{user.id}")
+    redirect to("/recetas")
   end
 end
+

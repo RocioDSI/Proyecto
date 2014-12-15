@@ -1,7 +1,11 @@
 source 'https://rubygems.org'
 
+<<<<<<< HEAD
 #Ruby "2.0.0"
 
+=======
+#ruby "2.0.0"
+>>>>>>> maria
 
 gem "sinatra"
 gem 'activerecord'
@@ -14,13 +18,14 @@ gem 'data_mapper'
 gem 'sinatra-contrib'
 gem 'rack-cache'
 
-group :development, :test do
-   gem 'sqlite3', '1.3.7'
-   gem "dm-sqlite-adapter"
-   gem "tux"
+
+group :development do
+  gem "sqlite3"
+  gem "dm-sqlite-adapter"
+  gem "tux"
 end
 
 group :production do
-   gem "pg"
-   gem "dm-postgres-adapter"
+  gem "pg"
+  gem "dm-postgres-adapter"
 end
