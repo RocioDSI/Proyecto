@@ -12,13 +12,13 @@ Autores:
 Receblario es tu blog, en el que puedes publicar tus recetas de cocina y consultar las recetas de los demás usuarios.
 
 ¡Comenta!
-Recibe comentarios o hazlos tu sobre una receta. Entre todos podemos mejorar
+> Recibe comentarios o hazlos tu sobre una receta. Entre todos podemos mejorar
 
 ¡Publica tus recetas!
-¿Tienes una receta especial? Compártela con nosotros
+> ¿Tienes una receta especial? Compártela con nosotros
 
 Toma nota
-Siempre es una buena idea echarle un ojo a las recetas de otros cocineros, seguro que encontramos algo que nos gustaría introducir a nuestra propia receta.
+> Siempre es una buena idea echarle un ojo a las recetas de otros cocineros, seguro que encontramos algo que nos gustaría introducir a nuestra propia receta.
 
 ## Tecnologías que hemos utilizado
 
@@ -34,6 +34,36 @@ DataMapper
 
 Fuente: [DataMapper.org](http://datamapper.org/)
 
+Instrucciones
+-------------
+**Para ejecutarlo de forma local**
+
+1. Clona este repositorio para disponer del código:
+
+        $ git@github.com:RocioDSI/Proyecto.git
+
+2. Instala las gemas correspondientes para que todo funcione correctamente:
+
+        $ bundle install
+
+En caso de error, intentar:
+
+        $ bundle install --without production
+
+3. Ejecuta el programa de forma manual o mediante Rake:
+
+        $ rackup
+        $ rake
+
+5. Abre el navegador y ve al puerto [9292](http://localhost:9292/) para ver la aplicación:
+
+
+**Para ver la aplicación desplegada**
+Abre tu navegador y accede a [ReceBlario en Heroku](http://receblario.herokuapp.com/):
+
+        http://receblario.herokuapp.com/
+
 ---
-Universidad de La Laguna  
+Sistemas y Tecnologías Web
 Escuela Técnica Superior de Ingeniería Informática
+Universidad de La Laguna
