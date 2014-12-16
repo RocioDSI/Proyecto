@@ -1,6 +1,8 @@
 require 'sinatra'
 require 'sinatra/activerecord'
 require './environments'
+require 'dm-core'
+require 'dm-migrations'
 require 'sinatra/flash'
 require 'sinatra/redirect_with_flash'
 
@@ -28,19 +30,23 @@ set :session_secret, '*&(^#234a)'
 user = Array.new()
 
 class Post < ActiveRecord::Base
-  validates :title, presence: true, length: {minimum: 5}
+  validates :title, presence: true, length: {minimum: 1}
   validates :body, presence: true
   #validates :autor, presence: true # para cuando estén bien implementados los usuarios
 end
 
-#class User
-#  include DataMapper::Resource
-# 
-#  property :id, String
-#  property :email, String
-#  property :pass, String
-#  property :created_at, DateTime
-#end
+class User
+  include DataMapper::Resource
+  property :id, Serial
+  property :username, String
+  property :password, String
+end
+
+configure :development do
+  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
+end
+
+DataMapper.finalize
 
 helpers do
   def title
@@ -81,7 +87,7 @@ get '/auth/:name/callback' do
   #PP.pp @auth
   #puts "*************@auth.methods*****************"
   #PP.pp @auth.methods.sort
-  erb :index
+  erb :login
 end
 
 post "/login" do
@@ -142,3 +148,51 @@ put "/posts/:id" do
   redirect "/posts/#{@post.id}"
 end
 
+get '/login' do
+  erb :signup
+end
+
+get '/users/new' do
+  erb :signup
+end
+
+get '/users/:id' do |id|
+  @user = User.get(id)
+  erb :recetas
+end
+
+# Crea el usuario en la base de datos siempre que sea posible
+# Si el usuario ya existe, o si el username o password están
+# vacíos, devuelve un mensaje de error mediante el flash de
+# sinatra
+
+get '/login' do
+haml :login
+end
+# Realiza el login comprobando que el nombre de usuario y contraseña
+# introducidos son los correctos. Si el usuario y contraseña no están
+# rellenos, o no han sido creados en la base de datos, devuelve error
+# mediante el flash de sinatra; si no es así, crea la sesión
+# agregando el atributo user en el hash de session, con el username
+# del usuario que ha realizado el login
+post '/login' do
+  if (params[:user][:username].empty?) || (params[:user][:password].empty?)
+    flash[:error] = "Error: The user or the password field is empty"
+    redirect to ('/login')
+  elsif User.first(:username => "#{params[:user][:username]}", :password => "#{params[:user][:password]}")
+    flash[:login] = "Login successfully"
+    session["user"] = "#{params[:user][:username]}"
+    puts session["user"]
+    redirect to ('/')
+  else
+    flash[:error] = "The user doesn't exist or the password is invalid"
+    redirect to("/login")
+  end
+end
+# Realiza el logout del usuario, eliminando el atributo user
+# de la session
+get '/logout' do
+  session.delete("user")
+  flash[:logout] = "Logout successfully"
+  redirect to ('/')
+end
