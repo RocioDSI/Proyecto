@@ -48,11 +48,11 @@ Instrucciones
 
         $ bundle install
 
-En caso de error, intentar:
+3. En caso de error, intentar:
 
         $ bundle install --without production
 
-3. Ejecuta el programa de forma manual o mediante Rake:
+4. Ejecuta el programa de forma manual o mediante Rake:
 
         $ rackup
         $ rake

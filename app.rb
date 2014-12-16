@@ -80,10 +80,19 @@ end
 # Autenticacion con OAuth
 get '/auth/:name/callback' do
   @auth = request.env['omniauth.auth']
-  session["user"] = "#{params[:user][:username]}"
-  @user['username'] = @auth['info'].first_name
-  puts session["user"]
-  erb :recetas
+  puts "params = #{params}"
+  puts "@auth.class = #{@auth.class}"
+  puts "@auth info = #{@auth['info']}"
+  puts "@auth info class = #{@auth['info'].class}"
+  puts "@auth info name = #{@auth['info'].name}"
+  puts "@auth info email = #{@auth['info'].email}"
+  erb :oauthrecetas
+end
+
+get "/oauthrecetas" do
+  @posts = Post.order("created_at DESC")
+  #@title = ReceBlario
+  erb :oauthrecetas
 end
 
 post "/login" do
