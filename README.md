@@ -4,9 +4,9 @@ Proyecto de Sistemas y Tecnologías Web
 ## ReceBlario: tu blog de recetas
 
 Autores:
-* [Sem Ramos Herrera](https://campusvirtual.ull.es/1415/user/view.php?id=2643&course=5678)
-* [Rocío Rodríguez Morín](https://campusvirtual.ull.es/1415/user/view.php?id=6590&course=5678)
 * [María Rojas Estévez](https://campusvirtual.ull.es/1415/user/view.php?id=15022&course=5678)
+* [Rocío Rodríguez Morín](https://campusvirtual.ull.es/1415/user/view.php?id=6590&course=5678)
+* [Sem Ramos Herrera](https://campusvirtual.ull.es/1415/user/view.php?id=2643&course=5678)
 
 ---------------------------------------
 
@@ -37,6 +37,7 @@ Fuente: [DataMapper.org](http://datamapper.org/)
 
 Instrucciones
 -------------
+
 **Para ejecutarlo de forma local**
 
 1. Clona este repositorio para disponer del código:
@@ -60,6 +61,7 @@ En caso de error, intentar:
 
 
 **Para ver la aplicación desplegada**
+
 Abre tu navegador y accede a [ReceBlario en Heroku](http://receblario.herokuapp.com/):
 
         http://receblario.herokuapp.com/
