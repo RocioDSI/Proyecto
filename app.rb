@@ -60,7 +60,6 @@ end
 
 helpers do
   include Rack::Utils
-
 end
 
 # Obtiene todos los posts
@@ -71,6 +70,10 @@ get "/" do
 end
 
 get "/login" do
+  erb :login
+end
+
+get "/index" do
   erb :login
 end
 
@@ -116,9 +119,7 @@ post "/posts" do
   else
     redirect "posts/create", :error => 'Error al publicar, intentelo de nuevo.'
   end
-
 redirect "posts/recetas"
-
 end
 
 # Ver post
@@ -142,11 +143,11 @@ put "/posts/:id" do
 end
 
 get '/login' do
-  erb :signup
+  erb :recetas
 end
 
 get '/users/new' do
-  erb :signup
+  erb :login
 end
 
 get '/users/:id' do |id|
@@ -160,7 +161,7 @@ end
 # sinatra
 
 get '/login' do
-haml :login
+  erb :login
 end
 # Realiza el login comprobando que el nombre de usuario y contraseña
 # introducidos son los correctos. Si el usuario y contraseña no están
