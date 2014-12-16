@@ -86,12 +86,15 @@ get '/auth/:name/callback' do
   puts "@auth info class = #{@auth['info'].class}"
   puts "@auth info name = #{@auth['info'].name}"
   puts "@auth info email = #{@auth['info'].email}"
+  #puts "-------------@auth----------------------------------"
+  #PP.pp @auth
+  #puts "*************@auth.methods*****************"
+  #PP.pp @auth.methods.sort
   erb :oauthrecetas
 end
 
 get "/oauthrecetas" do
   @posts = Post.order("created_at DESC")
-  #@title = ReceBlario
   erb :oauthrecetas
 end
 

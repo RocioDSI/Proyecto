@@ -18,9 +18,13 @@
       </div>
     </div>
 
-<p> Nombre: <%= @auth['info'].first_name %> </p>
+  <pre>
+	<%= @auth.inspect.to_yaml %>
+  </pre>
+
+<!--p> Nombre: <%= @auth['info'].first_name %> </p>
 <p> Apellidos: <%= @auth['info'].last_name %> </p>
-<p> E-mail: <%= @auth['info'].email %> </p>
+<p> E-mail: <%= @auth['info'].email %> </p-->
 
 <ul>
 <% @posts.each do |post| %>
