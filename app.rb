@@ -15,19 +15,28 @@ require 'pry'
 require 'erubis'
 require 'pp'
 
-# Para usuarios
-require 'data_mapper'
-DataMapper.setup(:default, 'sqlite::memory:')
+# Habilita las sesiones
+# enable :sessions
+use Rack::Session::Pool, :expire_after => 2592000
+set :session_secret, 'super secret'
+
+# Setup para el desarrollo
+configure :development do
+  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
+end
+
+# Setup para la producción
+configure :production do
+  DataMapper.setup(:default, ENV['DATABASE_URL'])
+end
+
+DataMapper.auto_upgrade!
 
 # Para OAuth
 use OmniAuth::Builder do
   config = YAML.load_file 'config/config.yml'
   provider :google_oauth2, config['identifier'], config['secret']
 end
-
-enable :sessions
-set :session_secret, '*&(^#234a)'
-user = Array.new()
 
 class Post < ActiveRecord::Base
   validates :title, presence: true, length: {minimum: 1}
@@ -98,17 +107,26 @@ get "/oauthrecetas" do
   erb :oauthrecetas
 end
 
-post "/login" do
-  #if (user.include?(params[:username]))
-  #  redirect '/recetas'
-  #else
-  #  name = params[:username]
-  #  session[:name] = name
-  #  user << name
-  #  puts user
-  #  erb :recetas
-  #end
-  redirect "/recetas"
+# Realiza el login comprobando que el nombre de usuario y contraseña
+# introducidos son los correctos. Si el usuario y contraseña no están
+# rellenos, o no han sido creados en la base de datos, devuelve error
+# mediante el flash de sinatra; si no es así, crea la sesión
+# agregando el atributo user en el hash de session, con el username
+# del usuario que ha realizado el login
+
+post '/login' do
+  if (params[:user][:username].empty?) || (params[:user][:password].empty?)
+    flash[:error] = "Error: The user or the password field is empty"
+    redirect to ('/login')
+  elsif User.first(:username => "#{params[:user][:username]}", :password => "#{params[:user][:password]}")
+    flash[:login] = "Login successfully"
+    session["user"] = "#{params[:user][:username]}"
+    puts session["user"]
+    redirect to ('/')
+  else
+    flash[:error] = "The user doesn't exist or the password is invalid"
+    redirect to("/login")
+  end
 end
 
 get "/recetas" do
@@ -175,12 +193,14 @@ end
 get '/login' do
   erb :login
 end
+
 # Realiza el login comprobando que el nombre de usuario y contraseña
 # introducidos son los correctos. Si el usuario y contraseña no están
 # rellenos, o no han sido creados en la base de datos, devuelve error
 # mediante el flash de sinatra; si no es así, crea la sesión
 # agregando el atributo user en el hash de session, con el username
 # del usuario que ha realizado el login
+
 post '/login' do
   if (params[:user][:username].empty?) || (params[:user][:password].empty?)
     flash[:error] = "Error: The user or the password field is empty"
@@ -195,8 +215,10 @@ post '/login' do
     redirect to("/login")
   end
 end
+
 # Realiza el logout del usuario, eliminando el atributo user
 # de la session
+
 get '/logout' do
   session.delete("user")
   flash[:logout] = "Logout successfully"
