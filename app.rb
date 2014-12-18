@@ -30,8 +30,6 @@ configure :production do
   DataMapper.setup(:default, ENV['DATABASE_URL'])
 end
 
-DataMapper.auto_upgrade!
-
 # Para OAuth
 use OmniAuth::Builder do
   config = YAML.load_file 'config/config.yml'
@@ -41,7 +39,7 @@ end
 class Post < ActiveRecord::Base
   validates :title, presence: true, length: {minimum: 1}
   validates :body, presence: true
-  #validates :autor, presence: true # para cuando estén bien implementados los usuarios
+  validates :autor, presence: true # para cuando estén bien implementados los usuarios
 end
 
 class User
@@ -56,6 +54,7 @@ configure :development do
 end
 
 DataMapper.finalize
+DataMapper.auto_upgrade!
 
 helpers do
   def title
@@ -115,14 +114,30 @@ end
 # del usuario que ha realizado el login
 
 post '/login' do
-  if (params[:user][:username].empty?) || (params[:user][:password].empty?)
+  if (params[:username].empty?) || (params[:password].empty?)
     flash[:error] = "Error: The user or the password field is empty"
     redirect to ('/login')
-  elsif User.first(:username => "#{params[:user][:username]}", :password => "#{params[:user][:password]}")
+  elsif User.first(:username => "#{params[:username]}")
+    flash[:error] = "The user has been already created"
+    redirect to ('/login')
+  else
+    user = User.create(params[:user])
+    flash[:success] = "User created successfully"
     flash[:login] = "Login successfully"
-    session["user"] = "#{params[:user][:username]}"
+    session["user"] = "#{params[:username]}"
+    redirect to("/posts/create")
+  end
+end
+
+post '/index' do
+  if (params[:username].empty?) || (params[:password].empty?)
+    flash[:error] = "Error: The user or the password field is empty"
+redirect to ('/login')
+  elsif User.first(:username => params[:username], :password => params[:password])
+    flash[:login] = "Login successfully"
+    session["user"] = "#{params[:username]}"
     puts session["user"]
-    redirect to ('/')
+    redirect to ('/posts/create')
   else
     flash[:error] = "The user doesn't exist or the password is invalid"
     redirect to("/login")
@@ -139,6 +154,7 @@ end
 get "/posts/create" do
   @title = "Comparte una nueva receta"
   @post = Post.new
+  @autor = @username 
   erb :create
 end
 
@@ -172,10 +188,6 @@ put "/posts/:id" do
   redirect "/posts/#{@post.id}"
 end
 
-get '/login' do
-  erb :recetas
-end
-
 get '/users/new' do
   erb :login
 end
@@ -192,28 +204,6 @@ end
 
 get '/login' do
   erb :login
-end
-
-# Realiza el login comprobando que el nombre de usuario y contraseña
-# introducidos son los correctos. Si el usuario y contraseña no están
-# rellenos, o no han sido creados en la base de datos, devuelve error
-# mediante el flash de sinatra; si no es así, crea la sesión
-# agregando el atributo user en el hash de session, con el username
-# del usuario que ha realizado el login
-
-post '/login' do
-  if (params[:user][:username].empty?) || (params[:user][:password].empty?)
-    flash[:error] = "Error: The user or the password field is empty"
-    redirect to ('/login')
-  elsif User.first(:username => "#{params[:user][:username]}", :password => "#{params[:user][:password]}")
-    flash[:login] = "Login successfully"
-    session["user"] = "#{params[:user][:username]}"
-    puts session["user"]
-    redirect to ('/')
-  else
-    flash[:error] = "The user doesn't exist or the password is invalid"
-    redirect to("/login")
-  end
 end
 
 # Realiza el logout del usuario, eliminando el atributo user
