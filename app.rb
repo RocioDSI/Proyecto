@@ -39,7 +39,7 @@ end
 class Post < ActiveRecord::Base
   validates :title, presence: true, length: {minimum: 1}
   validates :body, presence: true
-  validates :autor, presence: true # para cuando estén bien implementados los usuarios
+#  validates :autor, presence: true # para cuando estén bien implementados los usuarios
 end
 
 class User
@@ -154,7 +154,6 @@ end
 get "/posts/create" do
   @title = "Comparte una nueva receta"
   @post = Post.new
-  @autor = @username 
   erb :create
 end
 
@@ -165,7 +164,7 @@ post "/posts" do
   else
     redirect "posts/create", :error => 'Error al publicar, intentelo de nuevo.'
   end
-redirect "posts/recetas"
+redirect "/recetas"
 end
 
 # Ver post
