@@ -7,13 +7,13 @@ require 'sinatra/flash'
 require 'sinatra/redirect_with_flash'
 
 # Para OAuth
-require 'bundler/setup'
-require 'sinatra/reloader' if development?
-require 'omniauth-oauth2'
-require 'omniauth-google-oauth2'
-require 'pry'
-require 'erubis'
-require 'pp'
+#require 'bundler/setup'
+#require 'sinatra/reloader' if development?
+#require 'omniauth-oauth2'
+#require 'omniauth-google-oauth2'
+#require 'pry'
+#require 'erubis'
+#require 'pp'
 
 # Habilita las sesiones
 # enable :sessions
@@ -31,15 +31,15 @@ configure :production do
 end
 
 # Para OAuth
-use OmniAuth::Builder do
-  config = YAML.load_file 'config/config.yml'
-  provider :google_oauth2, config['identifier'], config['secret']
-end
+#use OmniAuth::Builder do
+#  config = YAML.load_file 'config/config.yml'
+#  provider :google_oauth2, config['identifier'], config['secret']
+#end
 
 class Post < ActiveRecord::Base
   validates :title, presence: true, length: {minimum: 1}
   validates :body, presence: true
-  validates :autor, presence: true # para cuando estén bien implementados los usuarios
+#  validates :autor, presence: true # para cuando estén bien implementados los usuarios
 end
 
 class User
@@ -83,27 +83,6 @@ end
 
 get "/index" do
   erb :login
-end
-
-# Autenticacion con OAuth
-get '/auth/:name/callback' do
-  @auth = request.env['omniauth.auth']
-  puts "params = #{params}"
-  puts "@auth.class = #{@auth.class}"
-  puts "@auth info = #{@auth['info']}"
-  puts "@auth info class = #{@auth['info'].class}"
-  puts "@auth info name = #{@auth['info'].name}"
-  puts "@auth info email = #{@auth['info'].email}"
-  #puts "-------------@auth----------------------------------"
-  #PP.pp @auth
-  #puts "*************@auth.methods*****************"
-  #PP.pp @auth.methods.sort
-  erb :oauthrecetas
-end
-
-get "/oauthrecetas" do
-  @posts = Post.order("created_at DESC")
-  erb :oauthrecetas
 end
 
 # Realiza el login comprobando que el nombre de usuario y contraseña
@@ -154,7 +133,6 @@ end
 get "/posts/create" do
   @title = "Comparte una nueva receta"
   @post = Post.new
-  #@autor = @username 
   erb :create
 end
 
@@ -165,7 +143,7 @@ post "/posts" do
   else
     redirect "posts/create", :error => 'Error al publicar, intentelo de nuevo.'
   end
-redirect "posts/recetas"
+redirect "/recetas"
 end
 
 # Ver post
@@ -214,4 +192,3 @@ get '/logout' do
   flash[:logout] = "Logout successfully"
   redirect to ('/')
 end
-
