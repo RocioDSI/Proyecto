@@ -154,7 +154,7 @@ end
 get "/posts/create" do
   @title = "Comparte una nueva receta"
   @post = Post.new
-  @autor = @username 
+  #@autor = @username 
   erb :create
 end
 
