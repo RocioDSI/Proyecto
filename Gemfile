@@ -14,10 +14,10 @@ gem 'sinatra-contrib'
 gem 'rack-cache'
 
 #Para OAuth
-gem 'omniauth'
-gem 'omniauth-google-oauth2'
-gem 'pry'
-gem 'erubis'
+#gem 'omniauth'
+#gem 'omniauth-google-oauth2'
+#gem 'pry'
+#gem 'erubis'
 
 
 group :development do
