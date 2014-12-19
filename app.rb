@@ -6,14 +6,6 @@ require 'dm-migrations'
 require 'sinatra/flash'
 require 'sinatra/redirect_with_flash'
 
-# Para OAuth
-require 'bundler/setup'
-require 'sinatra/reloader' if development?
-require 'omniauth-oauth2'
-require 'omniauth-google-oauth2'
-require 'pry'
-require 'erubis'
-require 'pp'
 
 # Habilita las sesiones
 # enable :sessions
@@ -30,31 +22,22 @@ configure :production do
   DataMapper.setup(:default, ENV['DATABASE_URL'])
 end
 
-# Para OAuth
-use OmniAuth::Builder do
-  config = YAML.load_file 'config/config.yml'
-  provider :google_oauth2, config['identifier'], config['secret']
-end
-
 class Post < ActiveRecord::Base
   validates :title, presence: true, length: {minimum: 1}
   validates :body, presence: true
+  validates :autor, presence: true
 #  validates :autor, presence: true # para cuando estén bien implementados los usuarios
 end
 
-class User
-  include DataMapper::Resource
-  property :id, Serial
-  property :username, String
-  property :password, String
+class User < ActiveRecord::Base
+  #include DataMapper::Resource
+  validates :id, presence: true
+  validates :username, presence: true
+  validates :password, presence: true
 end
 
-configure :development do
-  DataMapper.setup(:default, "sqlite3://#{Dir.pwd}/development.db")
-end
-
-DataMapper.finalize
-DataMapper.auto_upgrade!
+#DataMapper.finalize
+#DataMapper.auto_upgrade!
 
 helpers do
   def title
@@ -85,26 +68,6 @@ get "/index" do
   erb :login
 end
 
-# Autenticacion con OAuth
-get '/auth/:name/callback' do
-  @auth = request.env['omniauth.auth']
-  puts "params = #{params}"
-  puts "@auth.class = #{@auth.class}"
-  puts "@auth info = #{@auth['info']}"
-  puts "@auth info class = #{@auth['info'].class}"
-  puts "@auth info name = #{@auth['info'].name}"
-  puts "@auth info email = #{@auth['info'].email}"
-  #puts "-------------@auth----------------------------------"
-  #PP.pp @auth
-  #puts "*************@auth.methods*****************"
-  #PP.pp @auth.methods.sort
-  erb :oauthrecetas
-end
-
-get "/oauthrecetas" do
-  @posts = Post.order("created_at DESC")
-  erb :oauthrecetas
-end
 
 # Realiza el login comprobando que el nombre de usuario y contraseña
 # introducidos son los correctos. Si el usuario y contraseña no están
@@ -121,7 +84,8 @@ post '/login' do
     flash[:error] = "The user has been already created"
     redirect to ('/login')
   else
-    user = User.create(params[:user])
+    
+    user = User.create(params[:id, :username, :password])
     flash[:success] = "User created successfully"
     flash[:login] = "Login successfully"
     session["user"] = "#{params[:username]}"
@@ -164,7 +128,11 @@ post "/posts" do
   else
     redirect "posts/create", :error => 'Error al publicar, intentelo de nuevo.'
   end
-redirect "/recetas"
+  redirect "/recetas"
+end
+
+post "/user" do
+  @user = User.new(params[:username])
 end
 
 # Ver post
