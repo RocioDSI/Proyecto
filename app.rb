@@ -6,15 +6,6 @@ require 'dm-migrations'
 require 'sinatra/flash'
 require 'sinatra/redirect_with_flash'
 
-# Para OAuth
-require 'bundler/setup'
-require 'sinatra/reloader' if development?
-require 'omniauth-oauth2'
-require 'omniauth-google-oauth2'
-require 'pry'
-require 'erubis'
-require 'pp'
-
 # Habilita las sesiones
 # enable :sessions
 use Rack::Session::Pool, :expire_after => 2592000
@@ -28,12 +19,6 @@ end
 # Setup para la producción
 configure :production do
   DataMapper.setup(:default, ENV['DATABASE_URL'])
-end
-
-# Para OAuth
-use OmniAuth::Builder do
-  config = YAML.load_file 'config/config.yml'
-  provider :google_oauth2, config['identifier'], config['secret']
 end
 
 class Post < ActiveRecord::Base
@@ -83,27 +68,6 @@ end
 
 get "/index" do
   erb :login
-end
-
-# Autenticacion con OAuth
-get '/auth/:name/callback' do
-  @auth = request.env['omniauth.auth']
-  puts "params = #{params}"
-  puts "@auth.class = #{@auth.class}"
-  puts "@auth info = #{@auth['info']}"
-  puts "@auth info class = #{@auth['info'].class}"
-  puts "@auth info name = #{@auth['info'].name}"
-  puts "@auth info email = #{@auth['info'].email}"
-  #puts "-------------@auth----------------------------------"
-  #PP.pp @auth
-  #puts "*************@auth.methods*****************"
-  #PP.pp @auth.methods.sort
-  erb :oauthrecetas
-end
-
-get "/oauthrecetas" do
-  @posts = Post.order("created_at DESC")
-  erb :oauthrecetas
 end
 
 # Realiza el login comprobando que el nombre de usuario y contraseña
