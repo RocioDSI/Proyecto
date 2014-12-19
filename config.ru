@@ -1,6 +1,4 @@
-# config.ru
-
-# prueba
+#!/usr/bin/env rackup
 
 require './app'
 # require_relative 'app'
